@@ -1,10 +1,11 @@
 // checkout/checkout_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_toastr/flutter_toastr.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nscd_app_for_booking/NTT%20Payment%20Services/ntt_data_pay.dart';
-import 'package:nscd_app_for_booking/NTT%20Payment%20Services/ntt_webview.dart';
+import 'package:nscd_app_for_booking/View/NTT%20Payment%20Services/ntt_data_pay.dart';
+import 'package:nscd_app_for_booking/View/NTT%20Payment%20Services/ntt_webview.dart';
 
-import 'package:nscd_app_for_booking/ticket.dart'; // assuming CartItem lives here
+import 'package:nscd_app_for_booking/View/ticket.dart'; // assuming CartItem lives here
 
 class CheckoutScreen extends StatefulWidget {
   final List<CartItem> cartItems;
@@ -17,7 +18,7 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   String? _selectedAddressId = 'addr1'; // default for demo
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   // Dummy addresses — replace with real data source later
   final List<Map<String, dynamic>> _addresses = [
     {
@@ -50,6 +51,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       print('no');
     }
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -185,12 +187,54 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
             TextButton.icon(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Add new address coming soon...'),
-                  ),
+                _scaffoldKey.currentState?.showBottomSheet(
+                  (BuildContext context) {
+                    return Container(
+                      height: 320,
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 16),
+                          Container(
+                            width: 40,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            "Persistent Bottom Sheet",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              // You can close it manually if you want
+                              Navigator.pop(context); // closes the sheet
+                            },
+                            child: const Text("Close sheet"),
+                          ),
+                          const SizedBox(height: 32),
+                        ],
+                      ),
+                    );
+                  },
+                  backgroundColor: Colors.transparent,
+                  elevation: 16,
+                  clipBehavior: Clip.antiAlias,
                 );
-                // new address Page
               },
               icon: const Icon(Icons.add, color: Colors.blue, size: 20),
               label: Text(
@@ -490,12 +534,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             builder: (_) => NttDataPay(grandTotal: grandTotal),
                           ),
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Placing order securely..."),
-                          ),
+
+                        FlutterToastr.show(
+                          "Proceeding to payment gateway...",
+                          context,
+                          backgroundColor: Colors.lightBlue[200]!,
+                          duration: FlutterToastr.lengthLong,
+                          textStyle: TextStyle(color: Colors.white),
                         );
-                        // TODO: proceed to payment gateway / order confirmation
                       },
                 icon: const Icon(Icons.lock, size: 20),
                 label: Text(

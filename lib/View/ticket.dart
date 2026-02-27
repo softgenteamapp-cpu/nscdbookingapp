@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_toastr/flutter_toastr.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:nscd_app_for_booking/cart/cart_page.dart';
+import 'package:nscd_app_for_booking/View/cart/cart_page.dart';
 
 class TicketSelectionPage extends StatefulWidget {
   final String selectedCategory;
-  final DateTime selectedDate;
+  late DateTime selectedDate;
 
-  const TicketSelectionPage({
+  TicketSelectionPage({
     super.key,
     required this.selectedCategory,
     required this.selectedDate,
@@ -288,6 +289,12 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(Icons.arrow_back_ios, color: Colors.black),
+        ),
         title: Text(
           "Book Ticket",
           style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
@@ -295,7 +302,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -306,10 +313,15 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Choose Visitor Category"),
+                      Text("Choose Visitor Category"),
                       DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
                         value: widget.selectedCategory,
-                        items: const [
+                        items: [
                           DropdownMenuItem(
                             value: "General",
                             child: Text("General Visitor"),
@@ -324,19 +336,53 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Select Date"),
-                      TextFormField(
-                        initialValue: DateFormat(
-                          'MM/dd/yyyy',
-                        ).format(widget.selectedDate),
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Icons.calendar_today),
+                      InkWell(
+                        onTap: () async {
+                          final DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: widget.selectedDate ?? DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime.now().add(
+                              const Duration(days: 365),
+                            ),
+                          );
+
+                          if (picked != null) {
+                            setState(() {
+                              widget.selectedDate = picked;
+                            });
+                          }
+                        },
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: "Visit Date",
+                            hintText: "Select date",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            suffixIcon: const Icon(Icons.calendar_today),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 16,
+                            ),
+                          ),
+                          child: Text(
+                            widget.selectedDate == null
+                                ? "Select date"
+                                : "${widget.selectedDate.day.toString().padLeft(2, '0')}-"
+                                      "${widget.selectedDate.month.toString().padLeft(2, '0')}-"
+                                      "${widget.selectedDate.year}",
+                            style: TextStyle(
+                              color: widget.selectedDate == null
+                                  ? Colors.grey
+                                  : Colors.black,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -564,10 +610,10 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                       color: Colors.grey[600],
                     ),
                   ),
-                
+
                   children: [
                     const SizedBox(height: 8),
-                
+
                     Row(
                       children: [
                         // Duration pill
@@ -607,7 +653,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                
+
                         // Capacity pill
                         Expanded(
                           flex: 3,
@@ -645,7 +691,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                
+
                         // Price pill
                         Expanded(
                           flex: 3,
@@ -676,9 +722,9 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                             ),
                           ),
                         ),
-                
+
                         const Spacer(),
-                
+
                         // Quantity field in a pill
                         Container(
                           width: 70,
@@ -700,27 +746,35 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                             ),
                             onChanged: (val) {
                               int newQty = int.tryParse(val) ?? 0;
-                
+
                               if (newQty > totalVisitors) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "Quantity cannot exceed total visitors",
-                                    ),
-                                  ),
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   const SnackBar(
+                                //     content: Text(
+                                //       "Quantity cannot exceed total visitors",
+                                //     ),
+                                //   ),
+                                // );
+                                FlutterToastr.show(
+                                  "Quantity cannot exceed total visitors",
+                                  context,
+                                  position: FlutterToastr.center,
+                                  backgroundColor: Colors.lightBlue[500]!,
+                                  duration: FlutterToastr.lengthLong,
+                                  textStyle: TextStyle(color: Colors.white),
                                 );
                                 return;
                               }
-                
+
                               setState(() => showQtys[show] = newQty);
                             },
                           ),
                         ),
                       ],
                     ),
-                
+
                     const SizedBox(height: 16),
-                
+
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -732,7 +786,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                
+
                     // Time chips
                     Wrap(
                       spacing: 8,
@@ -741,7 +795,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                         time,
                       ) {
                         bool isSelected = showSelectedTimes[show] == time;
-                
+
                         return ChoiceChip(
                           label: Text(
                             time,
@@ -766,7 +820,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                               setState(() => showSelectedTimes[show] = null);
                               return;
                             }
-                
+
                             bool noConflict = await _checkTimeConflict(
                               show,
                               time,
@@ -832,10 +886,13 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (generalEntryQty == 0) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Please select at least one visitor"),
-                          ),
+                        FlutterToastr.show(
+                          "Please select at least one visitor",
+                          context,
+                          position: FlutterToastr.center,
+                          backgroundColor: Colors.lightBlue[500]!,
+                          duration: FlutterToastr.lengthLong,
+                          textStyle: TextStyle(color: Colors.white),
                         );
                         return;
                       }
@@ -917,12 +974,12 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                       );
 
                       // Optional success feedback
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            "Added to Cart: ₹${totalPrice.toStringAsFixed(0)}",
-                          ),
-                        ),
+                      FlutterToastr.show(
+                        "Proceed Add to Cart...",
+                        context,
+                        backgroundColor: Colors.lightBlue[200]!,
+                        duration: FlutterToastr.lengthLong,
+                        textStyle: TextStyle(color: Colors.white),
                       );
                     },
                     style: ElevatedButton.styleFrom(

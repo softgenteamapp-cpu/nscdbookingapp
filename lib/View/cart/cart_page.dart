@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_toastr/flutter_toastr.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nscd_app_for_booking/checkout/checkout_page.dart';
-import 'package:nscd_app_for_booking/ticket.dart';
+import 'package:nscd_app_for_booking/View/checkout/checkout_page.dart';
+import 'package:nscd_app_for_booking/View/ticket.dart';
 
 class CartPage extends StatefulWidget {
   final List<CartItem> cartItems;
@@ -360,7 +361,6 @@ class _CartPageState extends State<CartPage>
                                       setState(() {
                                         widget.cartItems.removeAt(idx - 1);
                                       });
-                                      
                                     },
                                     tooltip: "Remove item",
                                   ),
@@ -414,8 +414,12 @@ class _CartPageState extends State<CartPage>
               height: 56,
               child: ElevatedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Proceeding to Checkout...")),
+                  FlutterToastr.show(
+                    "Proceeding to Checkout...",
+                    context,
+                    backgroundColor: Colors.lightBlue[200]!,
+                    duration: FlutterToastr.lengthLong,
+                    textStyle: TextStyle(color: Colors.white),
                   );
                   // TODO: navigate to payment / details page
                   Navigator.push(

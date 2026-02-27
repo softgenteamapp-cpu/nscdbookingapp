@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nscd_app_for_booking/language_provider/lang_provider.dart';
+import 'package:nscd_app_for_booking/Controller/providers/language_provider/lang_provider.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSwitch extends StatefulWidget {

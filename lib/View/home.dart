@@ -1,10 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nscd_app_for_booking/l10n/app_localizations.dart';
-import 'package:nscd_app_for_booking/lang.dart';
+import 'package:nscd_app_for_booking/Constant/custom_widget.dart';
+import 'package:nscd_app_for_booking/utils/l10n/app_localizations.dart';
+import 'package:nscd_app_for_booking/View/lang.dart';
 
-import 'package:nscd_app_for_booking/ticket.dart';
+import 'package:nscd_app_for_booking/View/ticket.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -14,13 +15,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _isExpanded = false;
   List<String> items = [
     "Entry Ticket",
     "Holo Show - Fourth Floor",
     "Science show - Second Floor",
-    "3D Film Show - Second Floor",
+    "3D AUDI-1 - Second Floor",
     "Science On Sphere - Second Floor",
-    "Fantasy Ride - Ground Floor",
   ];
   List<String> images = [
     "assets/images/bookTicket.jpg",
@@ -28,18 +29,20 @@ class _MyHomePageState extends State<MyHomePage> {
     "assets/images/scienceShow.png",
     "assets/images/3dshow.png",
     "assets/images/scienceOnSphere.jpeg",
-    "assets/images/fantasy.jpg",
   ];
   String _getPrice(String name) {
     switch (name.trim()) {
       case "Entry Ticket":
         return "Entry Fee ₹80";
       case "Holo Show - Fourth Floor":
+        return "Visitors Fee ₹60";
       case "Science show - Second Floor":
-      case "3D Film Show - Second Floor":
+        return "Visitors Fee ₹20";
+      case "3D AUDI-1 - Second Floor":
+        return "Visitors Fee ₹35";
       case "Science On Sphere - Second Floor":
-      case "Fantasy Ride - Ground Floor":
         return "Visitors Fee ₹50";
+
       default:
         return "";
     }
@@ -105,7 +108,12 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Colors.lightBlue[50],
             title: Row(
               mainAxisAlignment: .center,
-              children: [Text(appLoc.bookticket), Spacer(), LanguageSwitch()],
+              children: [
+                MyCustomwidget.myText(text1: appLoc.bookticket, text2: "NSCD"),
+                const Spacer(),
+
+                LanguageSwitch(),
+              ],
             ),
             centerTitle: true,
             floating: true,
@@ -136,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             builder: (context, setDialogState) {
                               return AlertDialog(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                                 title: const Text(
                                   "Book Your Visit",
@@ -304,7 +312,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       margin: const EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.grey.shade300),
                         boxShadow: [
                           BoxShadow(
@@ -318,8 +326,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           ClipRRect(
                             borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              bottomLeft: Radius.circular(12),
+                              topLeft: Radius.circular(8),
+                              bottomLeft: Radius.circular(8),
                             ),
                             child: Image.asset(
                               images[index],
@@ -338,25 +346,37 @@ class _MyHomePageState extends State<MyHomePage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    name,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                      height: 1.2,
-                                    ),
+                                  // Text(
+                                  //   name,
+                                  //   maxLines: 2,
+                                  //   overflow: TextOverflow.ellipsis,
+                                  //   style: GoogleFonts.roboto(
+                                  //     fontSize: 13,
+                                  //     fontWeight: FontWeight.w700,
+                                  //     height: 1.2,
+                                  //   ),
+                                  // ),
+                                  MyCustomwidget.myText(
+                                    text1: name,
+                                    txtColor1: Colors.grey.shade500,
+                                    fontSize1: 13,
+                                    fontWeight1: FontWeight.w700,
                                   ),
                                   const SizedBox(height: 4),
                                   if (price.isNotEmpty)
-                                    Text(
-                                      price,
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.green.shade700,
-                                      ),
+                                    // Text(
+                                    //   price,
+                                    //   style: GoogleFonts.roboto(
+                                    //     fontSize: 13,
+                                    //     fontWeight: FontWeight.w600,
+                                    //     color: Colors.green.shade700,
+                                    //   ),
+                                    // ),
+                                    MyCustomwidget.myText(
+                                      text1: price,
+                                      txtColor1: Colors.green.shade700,
+                                      fontSize1: 14,
+                                      fontWeight1: FontWeight.w600,
                                     ),
                                 ],
                               ),
@@ -413,7 +433,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: Colors.grey.shade300),
                           boxShadow: [
                             BoxShadow(
@@ -431,7 +451,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               flex: 3,
                               child: ClipRRect(
                                 borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(16),
+                                  top: Radius.circular(8),
                                 ),
                                 child: Image.asset(
                                   images[index],
@@ -445,8 +465,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(12),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
@@ -480,14 +499,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     options: CarouselOptions(
                       height: heightSize * 0.22,
                       viewportFraction:
-                          0.78, // shows part of next/prev → nice peek effect
+                          1, // shows part of next/prev → nice peek effect
                       enlargeCenterPage:
-                          true, // center item bigger & highlighted
-                      enlargeFactor: 0.2, // how much bigger center is
+                          false, // center item bigger & highlighted
+                      // how much bigger center is
                       autoPlay: true, // auto slides
-                      autoPlayInterval: const Duration(seconds: 4),
+                      autoPlayInterval: const Duration(seconds: 5),
                       autoPlayAnimationDuration: const Duration(
-                        milliseconds: 900,
+                        microseconds: 100,
                       ),
                       autoPlayCurve: Curves.fastOutSlowIn,
                       enableInfiniteScroll: true,
@@ -538,10 +557,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         margin: const EdgeInsets.only(bottom: 12),
                         elevation: 2,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: InkWell(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(8),
                           onTap: () {
                             // Optional: Navigate to details / re-open show info
                           },
@@ -549,8 +568,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: [
                               ClipRRect(
                                 borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8),
                                 ),
                                 child: Image.asset(
                                   visit.image,

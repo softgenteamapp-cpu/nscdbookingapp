@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:nscd_app_for_booking/home.dart';
-import 'package:nscd_app_for_booking/l10n/app_localizations.dart';
-import 'package:nscd_app_for_booking/language_provider/lang_provider.dart';
+import 'package:nscd_app_for_booking/View/home.dart';
+import 'package:nscd_app_for_booking/utils/l10n/app_localizations.dart';
+import 'package:nscd_app_for_booking/Controller/providers/language_provider/lang_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
