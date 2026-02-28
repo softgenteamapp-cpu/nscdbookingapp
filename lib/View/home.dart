@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return "₹40";
       case "School":
         return "₹30 / student";
-      default:
+      default: 
         return "—";
     }
   }

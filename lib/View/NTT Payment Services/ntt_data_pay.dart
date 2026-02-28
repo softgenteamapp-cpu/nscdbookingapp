@@ -45,25 +45,33 @@ class _NttDataPayState extends State<NttDataPay> {
 
     try {
       /// Generate transaction token from NTTDATAPAY
+      // final ndpsTokenId = await NdpsAuthService.generateToken(
+      //   config: nttdatapayConfig,
+      //   txnId: txnId,
+      //   amount: amount,
+      //   email: email,
+      //   mobile: mobile,
+      //   prodId: "NSE", // multi in case of split payments (multi-product)
+      // prodDetails: const [                                    // Add Multi-Product (Split Payment) Support
+      //   ProdDetail(prodName: "XXX", prodAmount: "1.00"),
+      //   ProdDetail(prodName: "XXXX", prodAmount: "1.00"),
+      // ],
+      // custAccNo: "213232323",
+      // clientCode: "testValueForClientCode",
+      // txnCurrency: "INR",
+      // udf1: "udf1", // optional
+      // udf2: "udf2", // optional
+      // udf3: "udf3", // optional
+      // udf4: "udf4", // optional
+      // udf5: "udf5", // optional
       final ndpsTokenId = await NdpsAuthService.generateToken(
         config: nttdatapayConfig,
-        txnId: txnId,
-        amount: amount,
-        email: email,
-        mobile: mobile,
-        prodId: "NSE", // multi in case of split payments (multi-product)
-        // prodDetails: const [                                    // Add Multi-Product (Split Payment) Support
-        //   ProdDetail(prodName: "XXX", prodAmount: "1.00"),
-        //   ProdDetail(prodName: "XXXX", prodAmount: "1.00"),
-        // ],
-        custAccNo: "213232323",
-        clientCode: "testValueForClientCode",
+        txnId: txnId, // unique transaction Id
+        amount: "1.00",
+        email: "test.user@xyz.in",
+        mobile: "8888888800",
+        prodId: "NSE",
         txnCurrency: "INR",
-        udf1: "udf1", // optional
-        udf2: "udf2", // optional
-        udf3: "udf3", // optional
-        udf4: "udf4", // optional
-        udf5: "udf5", // optional
       );
 
       if (!ctx.mounted) return;
